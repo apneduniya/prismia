@@ -5,6 +5,7 @@ import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
+
 contract Prismia is ERC721, ERC721URIStorage, AccessControl {
     uint256 private _nextTokenId;
 
@@ -15,9 +16,9 @@ contract Prismia is ERC721, ERC721URIStorage, AccessControl {
         // below commented one will be saved as metadata
         // string stage;
         // string location;
-        // uint48 timeStamp;
         // string notes;
 
+        uint256 timeStamp;
         string uri; // The metadata URI
     }
 
@@ -30,11 +31,12 @@ contract Prismia is ERC721, ERC721URIStorage, AccessControl {
         // string description;
         // string complianceDocumentation; // PDF
 
-        ProductLifeCycle[] productLifeCycles;
+        uint256 timeStamp;
+        uint256 tokenId;
     }
 
-    mapping(uint256 => Product) private productData;
-    mapping (address => uint256[]) private ownedTokens;
+    mapping(uint256 => ProductLifeCycle[]) private productData;
+    mapping (address => Product) private ownedTokensData;
 
     event ProductMinted(uint256 tokenId, address indexed manufacturer);
     event ProductLifeCycleUpdated(
@@ -57,7 +59,7 @@ contract Prismia is ERC721, ERC721URIStorage, AccessControl {
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri); // Set the metadata URI for the minted NFT
 
-        ownedTokens[msg.sender].push(tokenId);
+        ownedTokensData[msg.sender] = Product({timeStamp: block.timestamp, tokenId: tokenId});
 
         emit ProductMinted(tokenId, msg.sender);
     }
@@ -68,18 +70,18 @@ contract Prismia is ERC721, ERC721URIStorage, AccessControl {
     {
         require(_ownerOf(tokenId) != address(0), "Token does not exist");
 
-        ProductLifeCycle memory newLifeCycle = ProductLifeCycle({uri: uri});
+        ProductLifeCycle memory newLifeCycle = ProductLifeCycle({uri: uri, timeStamp: block.timestamp});
 
-        productData[tokenId].productLifeCycles.push(newLifeCycle);
+        productData[tokenId].push(newLifeCycle);
 
         emit ProductLifeCycleUpdated(tokenId, newLifeCycle);
     }
 
-    function getOwnedProducts() public view returns (uint256[] memory) {
-        return ownedTokens[msg.sender];
+    function getOwnedProduct() public view returns (Product memory) {
+        return ownedTokensData[msg.sender];
     }
 
-    function getProductLifeCycle(uint256 tokenId) public view returns (Product memory) {
+    function getProductLifeCycle(uint256 tokenId) public view returns (ProductLifeCycle[] memory) {
         return productData[tokenId];
     }
 
