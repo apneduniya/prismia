@@ -1,6 +1,5 @@
 "use client";
 
-import { PRODUCT_TEMPLATE } from "@/assets/data/constants";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { useEffect, useState } from "react";
 import {
@@ -25,10 +24,19 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
 import { getAllProductTemplate, getProductTemplate } from "@/utils/product";
+import { Loader2 } from "lucide-react";
+import { mintProduct } from "@/utils/contract";
+import { uploadJsonPinata } from "@/utils/pinata";
+import { Dialog } from "@/components/ui/dialog";
+import ProductRegisteredSuccessDialog from "@/components/common/ProductRegisteredSuccessDialog";
 
 
 export default function CreateProduct() {
+    const [productId, setProductId] = useState();
+    const [openSuccessDialog, setOpenSuccessDialog] = useState(false);
+    const [productTemplateList, setProductTemplateList] = useState([]);
     const [productTemplate, setProductTemplate] = useState();
+    const [loading, setLoading] = useState(false);
     const { ready, authenticated } = usePrivy();
     const { wallets } = useWallets();
     // const provider = await wallets[0].getEthersProvider();
@@ -42,7 +50,7 @@ export default function CreateProduct() {
         },
     })
 
-    function onSubmit(values) {
+    async function onSubmit(values) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
 
@@ -65,6 +73,28 @@ export default function CreateProduct() {
 
         console.log(values);
 
+        setLoading(true);
+
+        // upload to pinata and get the cid (metadata)
+        const cid = await uploadJsonPinata(values);
+
+        const provider = await wallets[1].getEthersProvider();
+        const signer = provider?.getSigner();
+
+        // call the contract function to mint the product
+        const receipt = await mintProduct(signer, `ipfs://${cid}`, wallets[0].address);
+
+        // get the product id
+        const events = receipt.events.filter((event) => event.event === "ProductMinted");
+        const productIdArray = events[0].args;
+        const productId = productIdArray[0].hash;
+
+        console.log("Product ID: ", productId);
+        setProductId(productId);
+
+        setLoading(false);
+        setOpenSuccessDialog(true);
+
     }
 
     function onProductTemplateChange(value) {
@@ -76,6 +106,16 @@ export default function CreateProduct() {
             form.setValue("price", data.defaultPrice);
         }
     }
+
+    useEffect(() => {
+        const templates = getAllProductTemplate();
+        if (!templates) {
+            alert("No product templates found. Please create a product template first.");
+            window.location.href = "/";
+            return;
+        }
+        setProductTemplateList(templates);
+    }, [])
 
     return (
         <>
@@ -94,7 +134,7 @@ export default function CreateProduct() {
                             </SelectTrigger>
                             <SelectContent>
                                 {
-                                    getAllProductTemplate().map((product) => (
+                                    productTemplateList.map((product) => (
                                         <SelectItem key={product.index} value={product.index}>
                                             {product.name}
                                         </SelectItem>
@@ -134,10 +174,18 @@ export default function CreateProduct() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="mt-4 w-full">Save</Button>
+                        <Button type="submit" className="mt-4 w-full" disabled={loading}>
+                            {
+                                loading && <Loader2 className="animate-spin" />
+                            }
+                            Save
+                        </Button>
                     </form>
                 </Form>
             </div>
+            <Dialog open={openSuccessDialog} onOpenChange={setOpenSuccessDialog}>
+                <ProductRegisteredSuccessDialog productId={productId} />
+            </Dialog>
         </>
     )
 }

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import LoginButton from "../privy/LoginButton";
 import { usePrivy } from "@privy-io/react-auth";
 import { Dialog, DialogTrigger } from "../ui/dialog";
-import CreateProductTemplate from "../common/CreateProductTemplate";
+import CreateProductTemplate from "../common/CreateProductTemplateDialog";
 
 
 export default function Navbar() {

@@ -6,15 +6,6 @@ const pinata = new PinataSDK({
 });
 
 
-// export async function uploadFilePinata() {
-//     try {
-//         const file = new File(["hello"], "Testing.txt", { type: "text/plain" });
-//         const upload = await pinata.upload.file(file);
-//         console.log(upload);
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
 export async function uploadFilePinata(pdfFile) {
     try {
         if (pdfFile.type !== "application/pdf") {

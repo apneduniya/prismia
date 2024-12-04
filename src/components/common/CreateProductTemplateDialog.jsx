@@ -34,6 +34,9 @@ import {
 import { saveProductTemplate } from "@/utils/product";
 import { Label } from "../ui/label";
 import { useState } from "react";
+import { uploadFilePinata } from "@/utils/pinata";
+import { set } from "zod";
+import { Loader2 } from "lucide-react";
   
 
 
@@ -48,6 +51,7 @@ export default function CreateProductTemplate() {
         },
     })
     const [complianceDocumentation, setComplianceDocumentation] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     async function onSubmit(values) {
         // Do something with the form values.
@@ -59,9 +63,17 @@ export default function CreateProductTemplate() {
             return;
         }
 
+        setLoading(true);
+
+        // upload the compliance documentation
+        const cid = await uploadFilePinata(complianceDocumentation);
+        values.complianceDocumentation = `ipfs://${cid}`;
+
         console.log(values);
         
         saveProductTemplate(values);
+
+        setLoading(false);
 
         // Close the dialog.
         form.reset();
@@ -168,7 +180,12 @@ export default function CreateProductTemplate() {
                             <Input id="complianceDocumentation" type="file" accept="application/pdf" className="cursor-pointer" onChange={handleFileChange} />
                         </div>
                         <DialogFooter>
-                            <Button type="submit" className="mt-4 w-full">Save</Button>
+                            <Button type="submit" className="mt-4 w-full" disabled={loading}>
+                                {
+                                    loading && <Loader2 className="animate-spin" />
+                                }
+                                Save
+                            </Button>
                         </DialogFooter>
                     </form>
                 </Form>

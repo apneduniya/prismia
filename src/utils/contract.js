@@ -11,13 +11,13 @@ const getContract = (providerOrSigner) => {
 // READ-ONLY: FUNCTIONS
 
 // Verify
-const verifyProduct = async (provider, productid) => {
+export const verifyProduct = async (provider, productid) => {
     const contract = getContract(provider);
     return await contract.verifyProduct(productid);
 }
 
 // Get token URI
-const getTokenURI = async (provider, tokenId) => {
+export const getTokenURI = async (provider, tokenId) => {
     const contract = getContract(provider);
     return await contract.tokenURI(tokenId);
 };
@@ -26,14 +26,14 @@ const getTokenURI = async (provider, tokenId) => {
 // STATE-CHANGING: FUNCTIONS
 
 // Update/Add a product's lifecycle
-const updateProductLifeCycle = async (signer, productId, to, uri) => {
+export const updateProductLifeCycle = async (signer, productId, to, uri) => {
     const contract = getContract(signer);
     const tx = await contract.updateProductLifeCycle(productId, to, uri);
     return await tx.wait();
 };
 
 // Mint/Create a new product
-const mintProduct = async (signer, uri, to) => {
+export const mintProduct = async (signer, uri, to) => {
     const contract = getContract(signer);
     const tx = await contract.mintProduct(uri, to);
     return await tx.wait();
