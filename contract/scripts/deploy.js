@@ -12,7 +12,8 @@ async function main() {
 
   // Compile and deploy the contract
   const Prismia = await hre.ethers.getContractFactory("Prismia");
-  const prismia = await Prismia.deploy(defaultAdmin, minter);
+  // const prismia = await Prismia.deploy(defaultAdmin, minter);
+  const prismia = await Prismia.deploy();
 
   // Wait for the deployment transaction to be mined
   await prismia.waitForDeployment();

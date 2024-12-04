@@ -49,12 +49,12 @@ export default function Navbar() {
                                     </DialogTrigger>
                                     <CreateProductTemplate />
                                 </Dialog>
-                                <a href="/products/create-product">
+                                <a href="/manufacturers/create-product">
                                     <span className="underline hover:no-underline">
                                         Register product
                                     </span>
                                 </a>
-                                <a href="/products/update-product-stage">
+                                <a href="/manufacturers/update-product-stage">
                                     <span className="underline hover:no-underline">
                                         Update product&apos;s stage
                                     </span>

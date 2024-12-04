@@ -28,7 +28,9 @@ export const createProductTemplateFormSchema = z.object({
 
 export const registerProductFormSchema = z.object({
   serialNumber: z.string().min(2).max(20),
-  price: z.number(),
+  price: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+    message: "Expected number, received a string"
+  }),
 });
 
 

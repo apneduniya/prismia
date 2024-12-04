@@ -1,16 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
-import {AccessControl} from "@openzeppelin/contracts/access/AccessControl.sol";
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ERC721URIStorage} from "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-
-contract Prismia is ERC721, ERC721URIStorage, AccessControl {
+contract Prismia is ERC721, ERC721URIStorage {
     uint256 private _nextTokenId;
-
-    // Define roles
-    bytes32 public constant MANUFACTURER = keccak256("MANUFACTURER");
 
     struct ProductLifeCycle {
         // below commented one will be saved as metadata
@@ -31,77 +26,143 @@ contract Prismia is ERC721, ERC721URIStorage, AccessControl {
         // string description;
         // string complianceDocumentation; // PDF
 
+        address manufacturer;
         uint256 timeStamp;
         uint256 tokenId;
     }
 
-    mapping(uint256 => ProductLifeCycle[]) private productData;
-    mapping (address => Product) private ownedTokensData;
+    struct ProductResponse {
+        Product product;
+        ProductLifeCycle[] lifeCycle;
+    }
 
-    event ProductMinted(uint256 tokenId, address indexed manufacturer);
+    // mapping(uint256 => ProductLifeCycle[]) private productData;
+    mapping(string => Product) private productDataByProductId;
+    mapping(string => ProductLifeCycle[]) private productLifeCycle;
+    // mapping(address => Product[]) private ownedTokensData;
+
+    event ProductMinted(string indexed productId, address indexed manufacturer);
     event ProductLifeCycleUpdated(
-        uint256 tokenId,
+        string indexed productId,
         ProductLifeCycle newLifeCycle
     );
 
     // event NewProductStage(
 
-    constructor(address defaultAdmin, address minter) ERC721("Prismia", "DPP") {
-        _grantRole(DEFAULT_ADMIN_ROLE, defaultAdmin);
-        _grantRole(MANUFACTURER, minter);
+    constructor() ERC721("Prismia", "DPP") {}
+
+    // verify
+    function verifyProduct(
+        string memory productId
+    ) public view returns (ProductResponse memory) {
+        Product memory product = productDataByProductId[productId];
+        ProductLifeCycle[] memory lifeCycle = productLifeCycle[productId];
+
+        return ProductResponse({product: product, lifeCycle: lifeCycle});
     }
 
-    function mintProduct(string memory uri, address to)
-        public
-        onlyRole(MANUFACTURER)
-    {
+    // create
+    function mintProduct(
+        string memory uri,
+        address to
+    ) public returns (string memory) {
         uint256 tokenId = _nextTokenId++;
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri); // Set the metadata URI for the minted NFT
 
-        ownedTokensData[msg.sender] = Product({timeStamp: block.timestamp, tokenId: tokenId});
+        // ownedTokensData[msg.sender].push(
+        //     Product({timeStamp: block.timestamp, tokenId: tokenId})
+        // );
 
-        emit ProductMinted(tokenId, msg.sender);
+        Product memory newProduct = Product({
+            manufacturer: msg.sender,
+            timeStamp: block.timestamp,
+            tokenId: tokenId
+        });
+
+        string memory productId = hashTokenId(tokenId);
+        productDataByProductId[productId] = newProduct;
+
+        emit ProductMinted(productId, msg.sender);
+
+        return productId;
     }
 
-    function addProductLifeCycle(uint256 tokenId, string memory uri)
-        public
-        onlyRole(MANUFACTURER)
-    {
+    // update
+    function updateProductLifeCycle(
+        string memory productId,
+        address to,
+        string memory uri
+    ) public {
+        uint256 tokenId = productDataByProductId[productId].tokenId;
         require(_ownerOf(tokenId) != address(0), "Token does not exist");
+        require(_ownerOf(tokenId) == msg.sender, "Not the owner of the token");
 
-        ProductLifeCycle memory newLifeCycle = ProductLifeCycle({uri: uri, timeStamp: block.timestamp});
+        ProductLifeCycle memory newLifeCycle = ProductLifeCycle({
+            uri: uri,
+            timeStamp: block.timestamp
+        });
 
-        productData[tokenId].push(newLifeCycle);
+        productLifeCycle[productId].push(newLifeCycle);
 
-        emit ProductLifeCycleUpdated(tokenId, newLifeCycle);
+        if (to != address(0) && to != msg.sender) {
+            _transfer(msg.sender, to, tokenId);
+        }
+
+        emit ProductLifeCycleUpdated(productId, newLifeCycle);
     }
 
-    function getOwnedProduct() public view returns (Product memory) {
-        return ownedTokensData[msg.sender];
-    }
+    // function getOwnedProducts() public view returns (Product[] memory) {
+    //     return ownedTokensData[msg.sender];
+    // }
 
-    function getProductLifeCycle(uint256 tokenId) public view returns (ProductLifeCycle[] memory) {
-        return productData[tokenId];
-    }
+    // function getProductLifeCycle(
+    //     uint256 tokenId
+    // ) public view returns (ProductLifeCycle[] memory) {
+    //     return productData[tokenId];
+    // }
 
     // The following functions are overrides required by Solidity.
 
-    function tokenURI(uint256 tokenId)
-        public
-        view
-        override(ERC721, ERC721URIStorage)
-        returns (string memory)
-    {
+    function tokenURI(
+        uint256 tokenId
+    ) public view override(ERC721, ERC721URIStorage) returns (string memory) {
         return super.tokenURI(tokenId);
     }
 
-    function supportsInterface(bytes4 interfaceId)
-        public
-        view
-        override(ERC721, ERC721URIStorage, AccessControl)
-        returns (bool)
-    {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view override(ERC721, ERC721URIStorage) returns (bool) {
         return super.supportsInterface(interfaceId);
+    }
+
+    // SUPPORT FUNCTIONS
+
+    // Function to hash a tokenId and return a truncated alphanumeric string
+    function hashTokenId(uint256 tokenId) public pure returns (string memory) {
+        // Step 1: Hash the tokenId with keccak256
+        bytes32 hash = keccak256(abi.encodePacked(tokenId));
+
+        // Step 2: Convert the hash to a readable alphanumeric string
+        // Using first 10 characters for brevity (can be adjusted)
+        string memory alphanumericHash = _toHexString(hash, 10);
+
+        return alphanumericHash;
+    }
+
+    // Internal function to convert bytes32 to a hex string
+    function _toHexString(
+        bytes32 data,
+        uint256 length
+    ) internal pure returns (string memory) {
+        bytes memory alphabet = "0123456789abcdef";
+        bytes memory str = new bytes(length * 2);
+
+        for (uint256 i = 0; i < length; i++) {
+            str[i * 2] = alphabet[uint8(data[i] >> 4) & 0x0f];
+            str[1 + i * 2] = alphabet[uint8(data[i] & 0x0f)];
+        }
+
+        return string(str);
     }
 }

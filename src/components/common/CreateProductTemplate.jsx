@@ -31,6 +31,9 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+import { saveProductTemplate } from "@/utils/product";
+import { Label } from "../ui/label";
+import { useState } from "react";
   
 
 
@@ -44,20 +47,34 @@ export default function CreateProductTemplate() {
             description: "",
         },
     })
+    const [complianceDocumentation, setComplianceDocumentation] = useState(null);
 
-    function onSubmit(values) {
+    async function onSubmit(values) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
 
+        // validate
+        if (!complianceDocumentation) {
+            alert("Please upload a compliance documentation file.");
+            return;
+        }
+
         console.log(values);
         
-        localStorage.setItem(PRODUCT_TEMPLATE, JSON.stringify(values));
+        saveProductTemplate(values);
 
         // Close the dialog.
         form.reset();
 
         alert("Product template created successfully!");
 
+    }
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setComplianceDocumentation(file);
+        }
     }
 
     return (
@@ -146,6 +163,10 @@ export default function CreateProductTemplate() {
                                 </FormItem>
                             )}
                         />
+                        <div className="grid w-full max-w-sm items-center gap-1.5">
+                            <Label htmlFor="complianceDocumentation">Compliance Documentation</Label>
+                            <Input id="complianceDocumentation" type="file" accept="application/pdf" className="cursor-pointer" onChange={handleFileChange} />
+                        </div>
                         <DialogFooter>
                             <Button type="submit" className="mt-4 w-full">Save</Button>
                         </DialogFooter>

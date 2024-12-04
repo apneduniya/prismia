@@ -2,8 +2,9 @@ require("dotenv").config();
 require("@nomicfoundation/hardhat-toolbox")
 
 // best for verifying on open-campus
-// TERMINAL COMMAND: bun hardhat verify --network edu-chain-testnet 0xD75Bb8354f27e9476a87524ad152864656b2199d 0x17Ad46C3C8AF35c79995014173Bf263DD14d0A22 0x17Ad46C3C8AF35c79995014173Bf263DD14d0A22
+// TERMINAL COMMAND: bun hardhat verify --network edu-chain-testnet <contract address> 
 // For more: https://devdocs.opencampus.xyz/build/smart-contracts/verify-contracts
+
 module.exports = {
   solidity: "0.8.28",
   paths: {
