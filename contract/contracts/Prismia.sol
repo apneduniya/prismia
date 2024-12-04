@@ -26,6 +26,7 @@ contract Prismia is ERC721, ERC721URIStorage, AccessControl {
         // string name;
         // string serialNumber; // unique
         // string category;
+        // uint256 price;
         // string description;
         // string complianceDocumentation; // PDF
 

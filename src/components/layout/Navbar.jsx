@@ -1,17 +1,21 @@
+/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import LoginButton from "../privy/LoginButton";
+import { usePrivy } from "@privy-io/react-auth";
+import { Dialog, DialogTrigger } from "../ui/dialog";
+import CreateProductTemplate from "../common/CreateProductTemplate";
 
 
 export default function Navbar() {
     const pathname = usePathname();
+    const { ready, authenticated } = usePrivy();
     const [showLoginButton, setShowLoginButton] = useState(false);
 
     useEffect(() => {
-        if (pathname === "/manufacturers") {
+        if (pathname.includes("/manufacturers")) {
             setShowLoginButton(true);
         }
     }, [pathname]);
@@ -19,22 +23,52 @@ export default function Navbar() {
     return (
         <>
             <nav className="fixed top-0 left-0 w-full flex py-5 px-6 justify-between items-center z-[999999]">
-                <span className="font-extrabold text-3xl">
-                    Prismia
-                </span>
+                <a href="/">
+                    <span className="font-extrabold text-3xl">
+                        Prismia
+                    </span>
+                </a>
                 <div className="flex gap-10 items-center">
-                    <Link href="/manufacturers">
-                        <span className="underline hover:no-underline">
-                            For manufacturers
-                        </span>
-                    </Link>
-                    <Link href="/">
-                        <span className="underline hover:no-underline">
-                            For customers
-                        </span>
-                    </Link>
                     {
-                        showLoginButton && (
+                        !showLoginButton && !authenticated && (
+                            <a href="/manufacturers">
+                                <span className="underline hover:no-underline">
+                                    For manufacturers
+                                </span>
+                            </a>
+                        )
+                    }
+                    {
+                        authenticated && (
+                            <>
+                                <Dialog>
+                                    <DialogTrigger>
+                                        <span className="underline hover:no-underline">
+                                            Create product template
+                                        </span>
+                                    </DialogTrigger>
+                                    <CreateProductTemplate />
+                                </Dialog>
+                                <a href="/products/create-product">
+                                    <span className="underline hover:no-underline">
+                                        Register product
+                                    </span>
+                                </a>
+                                <a href="/products/update-product-stage">
+                                    <span className="underline hover:no-underline">
+                                        Update product&apos;s stage
+                                    </span>
+                                </a>
+                            </>
+                        )
+                    }
+                    <a href="/">
+                        <span className="underline hover:no-underline">
+                            Verify product
+                        </span>
+                    </a>
+                    {
+                        (authenticated || showLoginButton) && (
                             <LoginButton />
                         )
                     }

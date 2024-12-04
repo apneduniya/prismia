@@ -24,8 +24,10 @@ export default function LoginButton() {
         // Disable login when Privy is not ready or the user is already authenticated
         if ((ready && authenticated)) {
             setDisableLogin(true);
-        } else {
             setDisableLogout(false);
+        } else {
+            setDisableLogin(false);
+            setDisableLogout(true);
         }
 
         console.log('ready', ready);
