@@ -10,11 +10,6 @@ const getContract = (providerOrSigner) => {
 
 // READ-ONLY: FUNCTIONS
 
-// Verify
-export const verifyProduct = async (provider, productid) => {
-    const contract = getContract(provider);
-    return await contract.verifyProduct(productid);
-}
 
 // Get token URI
 export const getTokenURI = async (provider, tokenId) => {
@@ -24,6 +19,14 @@ export const getTokenURI = async (provider, tokenId) => {
 
 
 // STATE-CHANGING: FUNCTIONS
+
+
+// Verify
+export const verifyProduct = async (signer, productid) => {
+    const contract = getContract(signer);
+    const tx = await contract.verifyProduct(productid);
+    return await tx.wait();
+}
 
 // Update/Add a product's lifecycle
 export const updateProductLifeCycle = async (signer, productId, to, uri) => {

@@ -41,7 +41,7 @@ export default function Providers({ children }) {
                 appearance: {
                     theme: 'light',
                     accentColor: '#676FFF',
-                    // logo: 'https://cdn-icons-png.flaticon.com/512/8133/8133849.png',
+                    // logo: 'https://static.thenounproject.com/png/3934127-200.png',
                 },
                 // Create embedded wallets for users who don't have a wallet
                 embeddedWallets: {

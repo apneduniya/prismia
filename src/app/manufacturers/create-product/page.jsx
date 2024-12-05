@@ -29,6 +29,7 @@ import { mintProduct } from "@/utils/contract";
 import { uploadJsonPinata } from "@/utils/pinata";
 import { Dialog } from "@/components/ui/dialog";
 import ProductRegisteredSuccessDialog from "@/components/common/ProductRegisteredSuccessDialog";
+import { ethers } from "ethers";
 
 
 export default function CreateProduct() {
@@ -78,7 +79,7 @@ export default function CreateProduct() {
         // upload to pinata and get the cid (metadata)
         const cid = await uploadJsonPinata(values);
 
-        const provider = await wallets[1].getEthersProvider();
+        const provider = await wallets[0].getEthersProvider();
         const signer = provider?.getSigner();
 
         // call the contract function to mint the product
@@ -86,10 +87,14 @@ export default function CreateProduct() {
 
         // get the product id
         const events = receipt.events.filter((event) => event.event === "ProductMinted");
+        console.log("Events: ", events);
         const productIdArray = events[0].args;
-        const productId = productIdArray[0].hash;
+        const productIdBigNumber = productIdArray[0];
 
-        console.log("Product ID: ", productId);
+        console.log("Product ID in BigNumbers: ", productIdBigNumber);
+
+        // it's in big number format. Convert it to string
+        const productId = ethers.BigNumber.from(productIdBigNumber).toString();
         setProductId(productId);
 
         setLoading(false);

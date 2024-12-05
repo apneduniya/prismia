@@ -62,7 +62,7 @@ export default function Navbar() {
                             </>
                         )
                     }
-                    <a href="/">
+                    <a href="/manufacturers/verify-product">
                         <span className="underline hover:no-underline">
                             Verify product
                         </span>

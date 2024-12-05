@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0xD5beb347F2E550889600167A9A8796Be937Bf747";
+export const CONTRACT_ADDRESS = "0x24DbF9bF975ba5e30c29eb2834af877F8a585d46";
 
 export const CONTRACT_ABI = [
   {
@@ -196,9 +196,9 @@ export const CONTRACT_ABI = [
     "inputs": [
       {
         "indexed": true,
-        "internalType": "string",
+        "internalType": "uint256",
         "name": "productId",
-        "type": "string"
+        "type": "uint256"
       },
       {
         "components": [
@@ -227,9 +227,9 @@ export const CONTRACT_ABI = [
     "inputs": [
       {
         "indexed": true,
-        "internalType": "string",
+        "internalType": "uint256",
         "name": "productId",
-        "type": "string"
+        "type": "uint256"
       },
       {
         "indexed": true,
@@ -239,6 +239,72 @@ export const CONTRACT_ABI = [
       }
     ],
     "name": "ProductMinted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "components": [
+          {
+            "components": [
+              {
+                "internalType": "address",
+                "name": "manufacturer",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "timeStamp",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct Prismia.Product",
+            "name": "product",
+            "type": "tuple"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "timeStamp",
+                "type": "uint256"
+              },
+              {
+                "internalType": "string",
+                "name": "uri",
+                "type": "string"
+              }
+            ],
+            "internalType": "struct Prismia.ProductLifeCycle[]",
+            "name": "lifeCycle",
+            "type": "tuple[]"
+          }
+        ],
+        "indexed": true,
+        "internalType": "struct Prismia.ProductResponse",
+        "name": "response",
+        "type": "tuple"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "ProductVerify",
     "type": "event"
   },
   {
@@ -379,13 +445,7 @@ export const CONTRACT_ABI = [
       }
     ],
     "name": "mintProduct",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -416,6 +476,35 @@ export const CONTRACT_ABI = [
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "productDataByProductId",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "manufacturer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timeStamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -567,9 +656,9 @@ export const CONTRACT_ABI = [
   {
     "inputs": [
       {
-        "internalType": "string",
+        "internalType": "uint256",
         "name": "productId",
-        "type": "string"
+        "type": "uint256"
       },
       {
         "internalType": "address",
@@ -590,9 +679,9 @@ export const CONTRACT_ABI = [
   {
     "inputs": [
       {
-        "internalType": "string",
+        "internalType": "uint256",
         "name": "productId",
-        "type": "string"
+        "type": "uint256"
       }
     ],
     "name": "verifyProduct",
@@ -644,7 +733,7 @@ export const CONTRACT_ABI = [
         "type": "tuple"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ];

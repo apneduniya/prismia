@@ -37,13 +37,14 @@ contract Prismia is ERC721, ERC721URIStorage {
     }
 
     // mapping(uint256 => ProductLifeCycle[]) private productData;
-    mapping(string => Product) private productDataByProductId;
-    mapping(string => ProductLifeCycle[]) private productLifeCycle;
+    mapping(uint256 => Product) public productDataByProductId;
+    mapping(uint256 => ProductLifeCycle[]) private productLifeCycle;
     // mapping(address => Product[]) private ownedTokensData;
 
-    event ProductMinted(string indexed productId, address indexed manufacturer);
+    event ProductMinted(uint256 indexed productId, address indexed manufacturer);
+    event ProductVerify(ProductResponse indexed response, address indexed owner, uint256);
     event ProductLifeCycleUpdated(
-        string indexed productId,
+        uint256 indexed productId,
         ProductLifeCycle newLifeCycle
     );
 
@@ -53,11 +54,22 @@ contract Prismia is ERC721, ERC721URIStorage {
 
     // verify
     function verifyProduct(
-        string memory productId
-    ) public view returns (ProductResponse memory) {
-        Product memory product = productDataByProductId[productId];
-        ProductLifeCycle[] memory lifeCycle = productLifeCycle[productId];
+        uint256 productId
+    ) public returns (ProductResponse memory) {
+        require(productDataByProductId[productId].manufacturer != address(0), "Product does not exist");
 
+        Product memory product = productDataByProductId[productId];
+        ProductLifeCycle[] memory lifeCycle;
+
+        if (productLifeCycle[productId].length > 0) {
+            lifeCycle = productLifeCycle[productId];
+        } else {
+            lifeCycle = new ProductLifeCycle[](0);
+        }
+
+        ProductResponse memory response = ProductResponse({product: product, lifeCycle: lifeCycle});
+        emit ProductVerify(response, msg.sender, productId);
+        
         return ProductResponse({product: product, lifeCycle: lifeCycle});
     }
 
@@ -65,7 +77,7 @@ contract Prismia is ERC721, ERC721URIStorage {
     function mintProduct(
         string memory uri,
         address to
-    ) public returns (string memory) {
+    ) public {
         uint256 tokenId = _nextTokenId++;
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri); // Set the metadata URI for the minted NFT
@@ -80,17 +92,14 @@ contract Prismia is ERC721, ERC721URIStorage {
             tokenId: tokenId
         });
 
-        string memory productId = hashTokenId(tokenId);
-        productDataByProductId[productId] = newProduct;
+        productDataByProductId[tokenId] = newProduct;
 
-        emit ProductMinted(productId, msg.sender);
-
-        return productId;
+        emit ProductMinted(tokenId, msg.sender);
     }
 
     // update
     function updateProductLifeCycle(
-        string memory productId,
+        uint256 productId,
         address to,
         string memory uri
     ) public {

@@ -35,9 +35,11 @@ export const registerProductFormSchema = z.object({
 
 
 export const updateProductLifecycleFormSchema = z.object({
+  productId: z.string().min(1).max(20),
   stage: z.string().min(2).max(20),
   location: z.string().min(2).max(20),
+  to: z.string().min(2).max(99),
   timeStamp: z.string().min(2).max(20),
-  notes: z.string().min(2).max(100),
+  notes: z.string().max(100),
 });
 
