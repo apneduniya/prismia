@@ -3,7 +3,7 @@
 <p align="center">Prismia is a blockchain-based platform that allows manufacturers to create digital passports for their products. These passports can be used to track every stage of the product&apos;s journey helping to boost sustainability, compliance, and trust through accessible, detailed data - <strong>Digital Product Passports (DPP)</strong></p>
 
 ## 🎥 DEMO of PoC (Proof of Concept)
-[![demo video](https://img.youtube.com/vi/99w4zN5kOH8/0.jpg)](https://www.youtube.com/watch?v=99w4zN5kOH8)
+[![demo video](https://img.youtube.com/vi/99w4zN5kOH8/0.jpg)](https://www.youtube.com/watch?v=99w4zN5kOH8){:target="_blank"}
 
 ## 📙 Features
 1. **Role-Based Access Control**
