@@ -27,7 +27,7 @@
    - Supports open access to standardized product information.
    - Enhances accountability and consumer trust.
 
-## 🤔 Why India Needs a Prismia (Digital Product Passport System)
+## 🤔 Why India Needs Prismia (Digital Product Passport System)
 1. **High Prevalence of Counterfeit Products**
    - Approximately 25–30% of products sold in India are counterfeit, affecting sectors like apparel, FMCG, pharmaceuticals, and electronics. [[Source](https://www.livemint.com/industry/retail/almost-25-30-products-sold-in-india-spurious-with-counterfeiting-report-11674655725574.html)]
    - In 2024, authorities seized fake medicines worth ₹6.6 crore in Kolkata, including counterfeit anti-cancer and anti-diabetes drugs. [[Source](https://www.telegraphindia.com/india/fake-medicines-worth-rs-6-6-crore-seized-by-drug-regulatory-authorities-in-kolkata/cid/2074640)]
