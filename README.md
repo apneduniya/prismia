@@ -1,6 +1,6 @@
 <h1 align="center">Prismia 🪪</h1>
 
-<p align="center">Prismia is a blockchain-based platform that allows manufacturers to create digital passports for their products. These passports can be used to track every stage of the product&apos;s journey helping to boost sustainability, compliance, and trust through accessible, detailed data - Digital Product Passports</p>
+<p align="center">Prismia is a blockchain-based platform that allows manufacturers to create digital passports for their products. These passports can be used to track every stage of the product&apos;s journey helping to boost sustainability, compliance, and trust through accessible, detailed data - **Digital Product Passports**</p>
 
 ## 🎥 DEMO
 [![demo video](https://img.youtube.com/vi/99w4zN5kOH8/0.jpg)](https://www.youtube.com/watch?v=99w4zN5kOH8)
