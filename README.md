@@ -27,7 +27,7 @@
    - Supports open access to standardized product information.
    - Enhances accountability and consumer trust.
 
-## 🤔 Why India Needs Prismia (Digital Product Passport System)
+## 🤔 Why India needs Prismia (Digital Product Passport System)
 1. **High Prevalence of Counterfeit Products**
    - Approximately 25–30% of products sold in India are counterfeit, affecting sectors like apparel, FMCG, pharmaceuticals, and electronics. [[Source](https://www.livemint.com/industry/retail/almost-25-30-products-sold-in-india-spurious-with-counterfeiting-report-11674655725574.html)]
    - In 2024, authorities seized fake medicines worth ₹6.6 crore in Kolkata, including counterfeit anti-cancer and anti-diabetes drugs. [[Source](https://www.telegraphindia.com/india/fake-medicines-worth-rs-6-6-crore-seized-by-drug-regulatory-authorities-in-kolkata/cid/2074640)]
@@ -47,7 +47,7 @@
 6. **Consumer Unawareness and Vulnerability**
    - Around 27% of consumers are unaware they are purchasing counterfeit products, and 31% knowingly buy them, often due to price sensitivity. ​[[Source 1](https://economictimes.indiatimes.com/news/india/counterfeits-constitute-25-30-pc-of-the-market-report/articleshow/97259460.cms)] [[Source 2](https://www.livemint.com/industry/retail/almost-25-30-products-sold-in-india-spurious-with-counterfeiting-report-11674655725574.html)]
 
-## 🤝 Benefits of Implementing Prismia (DPP)
+## 🤝 Benefits of implementing Prismia (DPP)
 - **Enhanced Traceability**: Blockchain ensures each product's origin and journey are transparent and immutable.
 - **Improved Consumer Safety**: Consumers can verify product authenticity before purchase, reducing health risks and they get verified information on product origin, materials, and compliance.
 - **Strengthened Regulatory Oversight**: Regulators can efficiently audit and monitor products, ensuring compliance with safety standards.
